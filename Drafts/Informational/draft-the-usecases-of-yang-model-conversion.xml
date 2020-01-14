@@ -7,6 +7,8 @@
              An alternate method (rfc include) is described in the references. -->
 
         <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+        <!ENTITY RFC6020 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml">
+        <!ENTITY RFC7950 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml">
         <!ENTITY RFC2629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
         <!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
         <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
@@ -121,7 +123,7 @@
          If this element is not present, the default is "Network Working Group",
              which is used by the RFC Editor as a nod to the history of the IETF. -->
 
-        <keyword>template</keyword>
+        <keyword>yang</keyword>
 
         <!-- Keywords will be incorporated into HTML output
              files in a meta tag but they have no effect on text or nroff
@@ -129,23 +131,117 @@
              keywords will be used for the search engine. -->
 
         <abstract>
-            <t>Insert an abstract: MANDATORY. This template is for creating an
-                Internet Draft.</t>
+            <t>This document contains the brief description and the guidelines for the
+                usage of Yang model conversion (YMC). It demonstrates the benifits of 
+                YMC for both communication vendors and network operators, provides
+                several usecases to show the proper operations, and provides the recommendations
+                for the development.
+            </t>
         </abstract>
     </front>
 
     <middle>
         <section title="Introduction">
-            <t>The original specification of xml2rfc format is in <xref
-                    target="RFC2629">RFC&nbsp;2629</xref>.</t>
+            <t>.</t>
+            
+        </section>
 
-            <section title="Requirements Language">
-                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-                    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-                    document are to be interpreted as described in <xref
-                            target="RFC2119">RFC 2119</xref>.</t>
+        <section title="Keywords">
+            <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+                "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+                document are to be interpreted as described in <xref
+                target="RFC2119">RFC 2119</xref>.</t>
+        </section>
+
+        <section title="Motivation and Advantages">
+            <section title="The usage limition of YANG">
+                <t>
+                    The Yang standards with version 1.0 <xref target="RFC6020">RFC 6020</xref>
+                    and version 1.1 <xref target="RFC7950">RFC 7950</xref> define a domain-
+                    specific language for network data modeling.
+                </t>
+            </section>
+            <section title="The benefits of Yang model conversion">
+                <t></t>
             </section>
         </section>
+
+        <section title="Usecases for vendors">
+            <section title="I don't know">
+            </section>
+            <section title="Maching between vendor's private model and operator's models.">
+                <figure align="center" anchor="multiple_to_one_controller">
+                    <artwork align="center"><![CDATA[
+     +-------------------------------------+
+     |       Communicatoin Equipment       |
+     |                                     |
+     |       +---------------------+       |
+     |       | internal YANG model |       |
+     |       +---------------------+       |
+     |               /\                    |
+     |         Sync  ||                    |
+     |               \/                    |
+     |       +---------------------+       |
+     |       |Yang Model Conversion|       |
+     |       +---------------------+       |
+     |         |        |        |         |
+     | +---------+ +---------+ +---------+ |
+     | | model A | | model B | | model X | |
+     | +---------+ +---------+ +---------+ |
+     |    /           |           \        |
+     +-------------------------------------+ 
+        /             |             \
+       /              |              \ 
+      /               |         ...   \ 
++------------+  +------------+     +------------+
+| Operator A |  | Operator B | ... | Operator X |
++------------+  +------------+     +------------+                  
+                ]]></artwork>
+
+                    <postamble>mapping from vendor internal model to multiple operators' models.</postamble>
+                </figure>
+            </section>
+        </section>
+
+        <section title="Usecases for operators">
+            <t>model-driven controller!!!!!!!</t>
+            <section title="Matching between operator's private model to vendor's models.">
+                <figure align="center" anchor="one_to_multiple_controllers">
+                    <artwork align="center"><![CDATA[
+      +-------------------------------+
+      |       Network Controller      |
+      |                               |
+      |     +---------------------+   |
+      |     | internal YANG model |   |
+      |     +---------------------+   |
+      |               /\              |
+      |         Sync  ||              |
+      |               \/              |
+      |     +---------------------+   |
+      |     |Yang Model Conversion|   |
+      |     +---------------------+   | 
+      |    /           |           \  |
+      +-------------------------------+
+        /             |             \
+       /              |              \ 
+      /               |         ...   \ 
++-------------+  +-------------+     +-------------+
+| Equipment A |  | Equipment B | ... | Equipment X |
++-------------+  +-------------+     +-------------+                  
+                ]]></artwork>
+
+                    <postamble>mapping from multiple equipment model to one model.</postamble>
+                </figure>
+            </section>
+        </section>
+
+        <section title="Considerations by using YMC">
+        </section>
+
+        <!-- **************************************************************************************** -->
+        <!-- **************************************************************************************** -->
+        <!-- **************************************************************************************** -->
+        <!-- **************************************************************************************** -->
 
         <section anchor="simple_list" title="Simple List">
             <t>List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
@@ -338,7 +434,7 @@ main(int argc, char *argv[])
                     target="DOMINATION"></xref>.</t>
         </section>
 
-        <!-- Possibly a 'Contributors' section ... -->
+        <!--  the sections below remain -->
 
         <section anchor="IANA" title="IANA Considerations">
             <t>This memo includes no request to IANA.</t>
@@ -376,6 +472,10 @@ main(int argc, char *argv[])
         <references title="Normative References">
             <!--?rfc include="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
             &RFC2119;
+            <!--?rfc include="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml"?-->
+            &RFC6020;
+            <!--?rfc include="http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml"?-->
+            &RFC7950;
 
             <reference anchor="min_ref">
                 <!-- the following is the minimum to make xml2rfc happy -->
