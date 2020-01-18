@@ -9,6 +9,8 @@
         <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
         <!ENTITY RFC6020 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml">
         <!ENTITY RFC7950 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml">
+        <!ENTITY RFC6241 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6241.xml">
+        <!ENTITY RFC8040 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8040.xml">
         <!ENTITY RFC2629 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
         <!ENTITY RFC3552 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml">
         <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
@@ -132,9 +134,9 @@
 
         <abstract>
             <t>This document contains the brief description and the guidelines for the
-                usage of Yang model conversion (YMC). It demonstrates the benifits of 
+                usage of Yang model conversion (YMC). It demonstrates the benefits of
                 YMC for both communication vendors and network operators, provides
-                several usecases to show the proper operations, and provides the recommendations
+                several use cases to show the proper operations, and provides the recommendations
                 for the development.
             </t>
         </abstract>
@@ -142,7 +144,56 @@
 
     <middle>
         <section title="Introduction">
-            <t>.</t>
+            <t>The Yang standards with version 1.0 <xref target="RFC6020">RFC 6020</xref>
+                and version 1.1 <xref target="RFC7950">RFC 7950</xref> define a domain-
+                specific language for network data modeling. By using Yang models, several network
+                management protocols like <xref target="RFC6241">NETCONF</xref> and
+                <xref target="RFC8040">RESTCONF</xref> are proposed. These protocols are deployed
+                widely in network management systems (including network controllers). The
+                Yang-model-driven systems generally generate codes from yang models by using Yang
+                compiler, and executes network operations on these model data. A lot of Yang models
+                are defined for the networks in different layers. The combination of multiple Yang
+                models form a complete network model under specific scenario.
+            </t>
+            <t>
+                A Yang model is composed of different statements. According to the descriptions in
+                Yang standards, these statements could be divided into module statement, submodule
+                statement, typedef statement, container statement, leaf-list statement, list statement,
+                choice statement, etc. In order to manage the updates for Yang models in the
+                equipment development, Yang standard introduces revision statement and augment
+                statement to indicate the version and extension for a Yang model. However, these
+                statements could only handle the model management in an incremental updating way, but
+                couldn't handle the mapping problem between two similar Yang models. And with the
+                widespread adoption of Yang, such a mapping problem occurs.
+            </t>
+            <t>
+                Until now, many Yang models have been defined by different organizations, vendors, network
+                operators, and foundations. These existed Yang models are deployed in different scenarios.
+                However, these models don't coordinate with each other very well. For a certain part,
+                the authors usually define duplicated and conflicted models to make this part meet their
+                own requirements. And once the data conversion from one model to another is required,
+                there is no such a solution defined. In order to address this problem, Yang model conversion
+                is introduced. In reality, such a model conversion happens when:
+                <list style="symbols">
+                    <t>
+                        A vendor is required to provide different models for different customers (telecom
+                        operators, cloud computing companies, etc.) on the same equipment.
+                    </t>
+                    <t>
+                        A network operator needs to map all network models defined by all network equipment
+                        into its own complete network model.
+                    </t>
+                    <t>
+                        An organization needs to map its own models into the models defined by another
+                        organization.
+                    </t>
+                </list>
+            </t>
+            <t>
+                The conversion between two Yang models enables the concrete definition of model difference. In all
+                conversion use cases, such a definition enhances the conversion robustness. Besides, it also make all
+                gap between models evaluable.
+            </t>
             
         </section>
 
@@ -153,27 +204,31 @@
                 target="RFC2119">RFC 2119</xref>.</t>
         </section>
 
-        <section title="Motivation and Advantages">
-            <section title="The usage limition of YANG">
-                <t>
-                    The Yang standards with version 1.0 <xref target="RFC6020">RFC 6020</xref>
-                    and version 1.1 <xref target="RFC7950">RFC 7950</xref> define a domain-
-                    specific language for network data modeling.
-                </t>
-            </section>
-            <section title="The benefits of Yang model conversion">
-                <t></t>
-            </section>
+        <section title="The usage limitation of Yang model conversion">
+            <t>
+                The model conversion MAY introduce information loss or information deviation while mapping the data
+                from one model to another. Therefore, the conversion could not be applied when the gap between two
+                models are non-negligible. Usually, only the mapping between two models that define the same
+                equipment component MAY succeeds. Yang model conversion is not recommended if the mapping problem
+                could be solved by simple augmentation, or other solutions without information loss or information deviation.
+            </t>
+            <t>
+                In database, there MAY be only one model stored, and other model data are generated by Yang model
+                conversion timely. Some nodes defined in schema tree MAY be skipped after model conversion. If the rpc
+                service or notification service include these skipped nodes, these services are not available.
+            </t>
         </section>
 
-        <section title="Usecases for vendors">
-            <section title="I don't know">
-            </section>
-            <section title="Maching between vendor's private model and operator's models.">
+        <section title="Use cases for Yang model conversion">
+            <t>
+                Yang model conversion is useful for all users. The following use cases show how to use it:
+            </t>
+            <section title="Use case for vendors">
+                <t>Matching between vendor's private model and operator's models.</t>
                 <figure align="center" anchor="multiple_to_one_controller">
                     <artwork align="center"><![CDATA[
      +-------------------------------------+
-     |       Communicatoin Equipment       |
+     |       Communication Equipment       |
      |                                     |
      |       +---------------------+       |
      |       | internal YANG model |       |
@@ -201,11 +256,10 @@
                     <postamble>mapping from vendor internal model to multiple operators' models.</postamble>
                 </figure>
             </section>
-        </section>
 
-        <section title="Usecases for operators">
-            <t>model-driven controller!!!!!!!</t>
-            <section title="Matching between operator's private model to vendor's models.">
+            <section title="Use case for operators">
+                <t>Matching between operator's private model to vendor's models.</t>
+                <t>Data migration for the existed huge performance data.</t>
                 <figure align="center" anchor="one_to_multiple_controllers">
                     <artwork align="center"><![CDATA[
       +-------------------------------+
@@ -229,7 +283,36 @@
 | Equipment A |  | Equipment B | ... | Equipment X |
 +-------------+  +-------------+     +-------------+                  
                 ]]></artwork>
+                    <postamble>mapping from multiple equipment model to one model.</postamble>
+                </figure>
+            </section>
 
+            <section title="Use case for multiple Yang model organizations">
+                <figure align="center" anchor="mapping_organization">
+                    <artwork align="center"><![CDATA[
+           +---------------------------------+
+           |          organization A         |
+       ____|__\ +-----------------------+    |
+      |    |  / |        model A1       | /__|__
+      |    |    +-----------------------+ \  |  |
+      |    |    +-----------------------+    |  |
+      |    |    |        model A2       | /__|__|_____________
+      |    |    +-----------------------+ \  |  |             |
+      |    |     /\                          |  |             |
+      |    +-----|---------------------------+  |             |
+      |     _____|_________________________     |             |
+      |    |     |                         |    |             |
+      |    |     |     __________________________________     |
+      |    |     |    |                    |    |        |    |
++-----------------------------+       +-----------------------------+
+|     |    |     |    |       |       |    |    |        |    |     |
+|     \/   \/    \/   \/      |       |    \/   \/       \/   \/    |
+|  +----------+ +----------+  |       |  +----------+ +----------+  |
+|  | model B1 | | model B2 |  |       |  | model C1 | | model C2 |  |
+|  +----------+ +----------+  |       |  +----------+ +----------+  |
+|        organization B       |       |        organization C       |
++-----------------------------+       +-----------------------------+
+                ]]></artwork>
                     <postamble>mapping from multiple equipment model to one model.</postamble>
                 </figure>
             </section>
@@ -238,203 +321,9 @@
         <section title="Considerations by using YMC">
         </section>
 
-        <!-- **************************************************************************************** -->
-        <!-- **************************************************************************************** -->
-        <!-- **************************************************************************************** -->
-        <!-- **************************************************************************************** -->
-
-        <section anchor="simple_list" title="Simple List">
-            <t>List styles: 'empty', 'symbols', 'letters', 'numbers', 'hanging',
-                'format'.</t>
-
-            <t><list style="symbols">
-                <t>First bullet</t>
-
-                <t>Second bullet</t>
-            </list> You can write text here as well.</t>
-        </section>
-
-        <section title="Figures">
-            <t>Figures should not exceed 69 characters wide to allow for the indent
-                of sections.</t>
-
-            <figure align="center" anchor="xml_happy">
-                <preamble>Preamble text - can be omitted or empty.</preamble>
-
-                <artwork align="left"><![CDATA[
-+-----------------------+
-| Use XML, be Happy :-) |
-|_______________________|
-            ]]></artwork>
-
-                <postamble>Cross-references allowed in pre- and postamble. <xref
-                        target="min_ref" />.</postamble>
-            </figure>
-
-            <t>The CDATA means you don't need to escape meta-characters (especially
-                &lt;&nbsp;(&amp;lt;) and &amp;&nbsp;(&amp;amp;)) but is not essential.
-                Figures may also have a title attribute but it won't be displayed unless
-                there is also an anchor. White space, both horizontal and vertical, is
-                significant in figures even if you don't use CDATA.</t>
-        </section>
-
-        <!-- This PI places the pagebreak correctly (before the section title) in the text output. -->
-
-        <?rfc needLines="8" ?>
-
-        <section title="Subsections and Tables">
-            <section title="A Subsection">
-                <t>By default 3 levels of nesting show in table of contents but that
-                    can be adjusted with the value of the "tocdepth" processing
-                    instruction.</t>
-            </section>
-
-            <section title="Tables">
-                <t>.. are very similar to figures:</t>
-
-                <texttable anchor="table_example" title="A Very Simple Table">
-                    <preamble>Tables use ttcol to define column headers and widths.
-                        Every cell then has a "c" element for its content.</preamble>
-
-                    <ttcol align="center">ttcol #1</ttcol>
-
-                    <ttcol align="center">ttcol #2</ttcol>
-
-                    <c>c #1</c>
-
-                    <c>c #2</c>
-
-                    <c>c #3</c>
-
-                    <c>c #4</c>
-
-                    <c>c #5</c>
-
-                    <c>c #6</c>
-
-                    <postamble>which is a very simple example.</postamble>
-                </texttable>
-            </section>
-        </section>
-
-        <section anchor="nested_lists" title="More about Lists">
-            <t>Lists with 'hanging labels': the list item is indented the amount of
-                the hangIndent: <list hangIndent="8" style="hanging">
-                    <t hangText="short">With a label shorter than the hangIndent.</t>
-
-                    <t hangText="fantastically long label">With a label longer than the
-                        hangIndent.</t>
-
-                    <t hangText="vspace_trick"><vspace blankLines="0" />Forces the new
-                        item to start on a new line.</t>
-                </list></t>
-
-            <!-- It would be nice to see the next piece (12 lines) all on one page. -->
-
-            <?rfc needLines="12" ?>
-
-            <t>Simulating more than one paragraph in a list item using
-                &lt;vspace&gt;: <list style="letters">
-                    <t>First, a short item.</t>
-
-                    <t>Second, a longer list item.<vspace blankLines="1" /> And
-                        something that looks like a separate pararaph..</t>
-                </list></t>
-
-            <t>Simple indented paragraph using the "empty" style: <list
-                    hangIndent="10" style="empty">
-                <t>The quick, brown fox jumped over the lazy dog and lived to fool
-                    many another hunter in the great wood in the west.</t>
-            </list></t>
-
-            <section title="Numbering Lists across Lists and Sections">
-                <t>Numbering items continuously although they are in separate
-                    &lt;list&gt; elements, maybe in separate sections using the "format"
-                    style and a "counter" variable.</t>
-
-                <t>First list: <list counter="reqs" hangIndent="4" style="format R%d">
-                    <t>#1</t>
-
-                    <t>#2</t>
-
-                    <t>#3</t>
-                </list> Specify the indent explicitly so that all the items line up
-                    nicely.</t>
-
-                <t>Second list: <list counter="reqs" hangIndent="4" style="format R%d">
-                    <t>#4</t>
-
-                    <t>#5</t>
-
-                    <t>#6</t>
-                </list></t>
-            </section>
-
-            <section title="Where the List Numbering Continues">
-                <t>List continues here.</t>
-
-                <t>Third list: <list counter="reqs" hangIndent="4" style="format R%d">
-                    <t>#7</t>
-
-                    <t>#8</t>
-
-                    <t>#9</t>
-
-                    <t>#10</t>
-                </list> The end of the list.</t>
-            </section>
-        </section>
-
-        <section anchor="codeExample"
-                 title="Example of Code or MIB Module To Be Extracted">
-            <figure>
-                <preamble>The &lt;artwork&gt; element has a number of extra attributes
-                    that can be used to substitute a more aesthetically pleasing rendition
-                    into HTML output while continuing to use the ASCII art version in the
-                    text and nroff outputs (see the xml2rfc README for details). It also
-                    has a "type" attribute. This is currently ignored except in the case
-                    'type="abnf"'. In this case the "artwork" is expected to contain a
-                    piece of valid Augmented Backus-Naur Format (ABNF) grammar. This will
-                    be syntax checked by xml2rfc and any errors will cause a fatal error
-                    if the "strict" processing instruction is set to "yes". The ABNF will
-                    also be colorized in HTML output to highlight the syntactic
-                    components. Checking of additional "types" may be provided in future
-                    versions of xml2rfc.</preamble>
-
-                <artwork><![CDATA[
-
-/**** an example C program */
-
-#include <stdio.h>
-
-void
-main(int argc, char *argv[])
-{
-    int i;
-
-    printf("program arguments are:\n");
-    for (i = 0; i < argc; i++) {
-        printf("%d: \"%s\"\n", i, argv[i]);
-    }
-
-    exit(0);
-} /* main */
-
-/* end of file */
-
-            ]]></artwork>
-            </figure>
-        </section>
-
         <section anchor="Acknowledgements" title="Acknowledgements">
-            <t>This template was derived from an initial version written by Pekka
-                Savola and contributed by him to the xml2rfc project.</t>
-
-            <t>This document is part of a plan to make xml2rfc indispensable <xref
-                    target="DOMINATION"></xref>.</t>
+            <t>This document is Supported by BUPT Excellent Ph.D. Students Foundation.</t>
         </section>
-
-        <!--  the sections below remain -->
 
         <section anchor="IANA" title="IANA Considerations">
             <t>This memo includes no request to IANA.</t>
@@ -498,6 +387,9 @@ main(int argc, char *argv[])
             &RFC2629;
 
             &RFC3552;
+
+            &RFC6241;
+            &RFC8040;
 
             &I-D.narten-iana-considerations-rfc2434bis;
 
